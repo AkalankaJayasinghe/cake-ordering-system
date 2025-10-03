@@ -218,13 +218,6 @@ Feel free to contribute to this project by:
 - Adding more cake categories
 - Enhancing the design
 
-## 📄 License
-
-This project is open source and available under the [MIT License](LICENSE).
-
-## 📞 Support
-
-For support or questions about this project, please open an issue in the repository.
 
 ---
 
