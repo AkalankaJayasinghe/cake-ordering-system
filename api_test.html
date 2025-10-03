@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Review System API Test - Cake Cravings</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+        .test-result {
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 5px;
+            border-left: 4px solid;
+        }
+        .success { background: #d4edda; border-color: #28a745; color: #155724; }
+        .error { background: #f8d7da; border-color: #dc3545; color: #721c24; }
+        .info { background: #d1ecf1; border-color: #17a2b8; color: #0c5460; }
+        .warning { background: #fff3cd; border-color: #ffc107; color: #856404; }
+        button {
+            background: #bc5957;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover { background: #a04846; }
+        button:disabled { background: #ccc; cursor: not-allowed; }
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+        input, textarea, select {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            box-sizing: border-box;
+        }
+        .reviews-display {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        .review-card {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 8px;
+            border-left: 4px solid #bc5957;
+        }
+        .loading {
+            text-align: center;
+            color: #666;
+            font-style: italic;
+        }
+        pre {
+            background: #f4f4f4;
+            padding: 1rem;
+            border-radius: 5px;
+            overflow-x: auto;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎂 Review System API Test</h1>
+        <p>Test the review system API endpoints and functionality</p>
+        
+        <div class="test-section">
+            <h2>1. API Connection Test</h2>
+            <button onclick="testAPIConnection()" id="testConnBtn">Test API Connection</button>
+            <div id="connectionResult"></div>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2>2. Load Reviews Test</h2>
+        <button onclick="loadReviews()" id="loadReviewsBtn">Load Reviews from Database</button>
+        <div id="reviewsResult"></div>
+        <div id="reviewsDisplay" class="reviews-display"></div>
+    </div>
+
+    <div class="container">
+        <h2>3. Submit Review Test</h2>
+        <form id="testReviewForm">
+            <div class="form-group">
+                <label for="testName">Name:</label>
+                <input type="text" id="testName" value="Test User" required>
+            </div>
+            <div class="form-group">
+                <label for="testEmail">Email:</label>
+                <input type="email" id="testEmail" value="test@example.com" required>
+            </div>
+            <div class="form-group">
+                <label for="testLocation">Location:</label>
+                <input type="text" id="testLocation" value="Test City, Test Country" required>
+            </div>
+            <div class="form-group">
+                <label for="testRating">Rating:</label>
+                <select id="testRating" required>
+                    <option value="">Select Rating</option>
+                    <option value="1">1 Star</option>
+                    <option value="2">2 Stars</option>
+                    <option value="3">3 Stars</option>
+                    <option value="4">4 Stars</option>
+                    <option value="5">5 Stars</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="testReview">Review:</label>
+                <textarea id="testReview" rows="3" placeholder="Test review message..." required>This is a test review submitted via the API test page to verify the review system is working correctly.</textarea>
+            </div>
+            <button type="submit" id="submitTestBtn">Submit Test Review</button>
+        </form>
+        <div id="submitResult"></div>
+    </div>
+
+    <div class="container">
+        <h2>4. Statistics Test</h2>
+        <button onclick="testStatistics()" id="testStatsBtn">Load Statistics</button>
+        <div id="statsResult"></div>
+    </div>
+
+    <div class="container">
+        <h2>5. Error Handling Test</h2>
+        <button onclick="testErrorHandling()" id="testErrorBtn">Test Error Scenarios</button>
+        <div id="errorResult"></div>
+    </div>
+
+    <script>
+        const API_BASE = window.location.origin + window.location.pathname.replace('/api_test.html', '') + '/review.php?api=true';
+        
+        // Test 1: API Connection
+        async function testAPIConnection() {
+            const btn = document.getElementById('testConnBtn');
+            const result = document.getElementById('connectionResult');
+            
+            btn.disabled = true;
+            btn.textContent = 'Testing...';
+            result.innerHTML = '<div class="info">Testing API connection...</div>';
+            
+            try {
+                const response = await fetch(API_BASE);
+                const data = await response.json();
+                
+                if (data.success) {
+                    result.innerHTML = `
+                        <div class="success">
+                            ✅ API Connection Successful!<br>
+                            <strong>Message:</strong> ${data.message}<br>
+                            <strong>Response Time:</strong> ${new Date().toLocaleTimeString()}
+                        </div>
+                    `;
+                } else {
+                    result.innerHTML = `
+                        <div class="error">
+                            ❌ API Error: ${data.message}
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                result.innerHTML = `
+                    <div class="error">
+                        ❌ Connection Failed: ${error.message}<br>
+                        Check if your local server is running and the API endpoint is accessible.
+                    </div>
+                `;
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Test API Connection';
+            }
+        }
+        
+        // Test 2: Load Reviews
+        async function loadReviews() {
+            const btn = document.getElementById('loadReviewsBtn');
+            const result = document.getElementById('reviewsResult');
+            const display = document.getElementById('reviewsDisplay');
+            
+            btn.disabled = true;
+            btn.textContent = 'Loading...';
+            result.innerHTML = '<div class="info">Loading reviews from database...</div>';
+            display.innerHTML = '<div class="loading">Loading reviews...</div>';
+            
+            try {
+                const response = await fetch(API_BASE + '&limit=6');
+                const data = await response.json();
+                
+                if (data.success) {
+                    const { reviews, pagination, stats } = data.data;
+                    
+                    result.innerHTML = `
+                        <div class="success">
+                            ✅ Successfully loaded ${reviews.length} reviews<br>
+                            <strong>Total in database:</strong> ${pagination.total_reviews}<br>
+                            <strong>Average rating:</strong> ${stats ? stats.average_rating.toFixed(1) : 'N/A'}/5
+                        </div>
+                    `;
+                    
+                    // Display reviews
+                    if (reviews.length > 0) {
+                        display.innerHTML = reviews.map(review => `
+                            <div class="review-card">
+                                <strong>${escapeHtml(review.name)}</strong> 
+                                <span style="color: #ffc107;">${'★'.repeat(review.rate)}${'☆'.repeat(5-review.rate)}</span><br>
+                                <small>${escapeHtml(review.email)}</small><br>
+                                <p style="margin: 0.5rem 0;">${escapeHtml(review.msg.substring(0, 100))}...</p>
+                                <small style="color: #666;">${new Date(review.date_added).toLocaleDateString()}</small>
+                            </div>
+                        `).join('');
+                    } else {
+                        display.innerHTML = '<div class="info">No reviews found in database.</div>';
+                    }
+                    
+                } else {
+                    result.innerHTML = `<div class="error">❌ Failed to load reviews: ${data.message}</div>`;
+                    display.innerHTML = '';
+                }
+            } catch (error) {
+                result.innerHTML = `<div class="error">❌ Error loading reviews: ${error.message}</div>`;
+                display.innerHTML = '';
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Load Reviews from Database';
+            }
+        }
+        
+        // Test 3: Submit Review
+        document.getElementById('testReviewForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const btn = document.getElementById('submitTestBtn');
+            const result = document.getElementById('submitResult');
+            
+            btn.disabled = true;
+            btn.textContent = 'Submitting...';
+            result.innerHTML = '<div class="info">Submitting test review...</div>';
+            
+            // Add timestamp to make each test unique
+            const timestamp = new Date().getTime();
+            
+            const reviewData = {
+                reviewerName: document.getElementById('testName').value + ' ' + timestamp,
+                reviewerEmail: 'test' + timestamp + '@example.com',
+                reviewerLocation: document.getElementById('testLocation').value,
+                rating: parseInt(document.getElementById('testRating').value),
+                reviewText: document.getElementById('testReview').value + ' (Test #' + timestamp + ')'
+            };
+            
+            try {
+                const response = await fetch(API_BASE, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(reviewData)
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    result.innerHTML = `
+                        <div class="success">
+                            ✅ Review submitted successfully!<br>
+                            <strong>Name:</strong> ${data.data.name}<br>
+                            <strong>Rating:</strong> ${data.data.rating} stars<br>
+                            <strong>Time:</strong> ${data.data.submission_time}
+                        </div>
+                    `;
+                } else {
+                    result.innerHTML = `<div class="error">❌ Submission failed: ${data.message}</div>`;
+                }
+            } catch (error) {
+                result.innerHTML = `<div class="error">❌ Error submitting review: ${error.message}</div>`;
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Submit Test Review';
+            }
+        });
+        
+        // Test 4: Statistics
+        async function testStatistics() {
+            const btn = document.getElementById('testStatsBtn');
+            const result = document.getElementById('statsResult');
+            
+            btn.disabled = true;
+            btn.textContent = 'Loading...';
+            result.innerHTML = '<div class="info">Loading statistics...</div>';
+            
+            try {
+                const response = await fetch(API_BASE);
+                const data = await response.json();
+                
+                if (data.success && data.data.stats) {
+                    const stats = data.data.stats;
+                    result.innerHTML = `
+                        <div class="success">
+                            ✅ Statistics loaded successfully!
+                            <pre>${JSON.stringify(stats, null, 2)}</pre>
+                        </div>
+                    `;
+                } else {
+                    result.innerHTML = '<div class="warning">⚠️ No statistics available or stats not returned</div>';
+                }
+            } catch (error) {
+                result.innerHTML = `<div class="error">❌ Error loading statistics: ${error.message}</div>`;
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Load Statistics';
+            }
+        }
+        
+        // Test 5: Error Handling
+        async function testErrorHandling() {
+            const btn = document.getElementById('testErrorBtn');
+            const result = document.getElementById('errorResult');
+            
+            btn.disabled = true;
+            btn.textContent = 'Testing...';
+            result.innerHTML = '<div class="info">Testing error scenarios...</div>';
+            
+            let errorTests = [];
+            
+            // Test 1: Invalid data
+            try {
+                const response = await fetch(API_BASE, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({})
+                });
+                const data = await response.json();
+                errorTests.push(`Invalid data test: ${data.success ? '❌ Should have failed' : '✅ Correctly rejected'}`);
+            } catch (e) {
+                errorTests.push(`Invalid data test: ❌ Unexpected error: ${e.message}`);
+            }
+            
+            // Test 2: Invalid rating
+            try {
+                const response = await fetch(API_BASE, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        reviewerName: 'Test',
+                        reviewerEmail: 'test@test.com',
+                        reviewerLocation: 'Test',
+                        rating: 10,
+                        reviewText: 'Test review'
+                    })
+                });
+                const data = await response.json();
+                errorTests.push(`Invalid rating test: ${data.success ? '❌ Should have failed' : '✅ Correctly rejected'}`);
+            } catch (e) {
+                errorTests.push(`Invalid rating test: ❌ Unexpected error: ${e.message}`);
+            }
+            
+            result.innerHTML = `
+                <div class="info">
+                    <strong>Error Handling Tests:</strong><br>
+                    ${errorTests.join('<br>')}
+                </div>
+            `;
+            
+            btn.disabled = false;
+            btn.textContent = 'Test Error Scenarios';
+        }
+        
+        // Utility function
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        // Auto-run initial test
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(testAPIConnection, 1000);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cake Categories - Cake Cravings</title>
+  <link rel="stylesheet" href="home.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    /* Enhanced styling for category page */
+    .header {
+      background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      padding: 1rem 0;
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+    }
+
+    .logoContent {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .logo img {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid #d4619a;
+      box-shadow: 0 4px 15px rgba(212, 97, 154, 0.3);
+      transition: transform 0.3s ease;
+    }
+
+    .logo img:hover {
+      transform: scale(1.05);
+    }
+
+    .logoName {
+      font-size: 2.5rem;
+      font-weight: 700;
+      background: linear-gradient(45deg, #d4619a, #8b5a96);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin: 0;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .hero-section {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      padding: 150px 0 80px;
+      text-align: center;
+      color: white;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="80" cy="40" r="3" fill="rgba(255,255,255,0.05)"/><circle cx="40" cy="70" r="1" fill="rgba(255,255,255,0.1)"/></svg>');
+      background-size: 100px 100px;
+      animation: floating-particles 20s linear infinite;
+    }
+
+    @keyframes floating-particles {
+      0% { transform: translateY(0) rotate(0deg); }
+      100% { transform: translateY(-100px) rotate(360deg); }
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-title {
+      font-size: 4rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .hero-subtitle {
+      font-size: 1.8rem;
+      opacity: 0.9;
+      margin-bottom: 2rem;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+      line-height: 1.6;
+    }
+
+    .categories-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 3rem;
+      padding: 4rem 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .category {
+      background: white;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      transition: all 0.4s ease;
+      position: relative;
+    }
+
+    .category:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+    }
+
+    .category img {
+      width: 100%;
+      height: 250px;
+      object-fit: cover;
+      transition: transform 0.4s ease;
+    }
+
+    .category:hover img {
+      transform: scale(1.05);
+    }
+
+    .category-content {
+      padding: 2rem;
+      text-align: center;
+    }
+
+    .category h2 {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #333;
+      margin-bottom: 1rem;
+    }
+
+    .category p {
+      color: #666;
+      font-size: 1.4rem;
+      margin-bottom: 2rem;
+      line-height: 1.6;
+    }
+
+    .btn {
+      background: linear-gradient(45deg, #d4619a, #8b5a96);
+      color: white;
+      padding: 1.2rem 2.5rem;
+      border-radius: 50px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1.4rem;
+      transition: all 0.3s ease;
+      display: inline-block;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(212, 97, 154, 0.4);
+    }
+
+    @media (max-width: 768px) {
+      .hero-title {
+        font-size: 2.5rem;
+      }
+      
+      .hero-subtitle {
+        font-size: 1.4rem;
+      }
+
+      .categories-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+        padding: 2rem 1rem;
+      }
+
+      .logoName {
+        font-size: 1.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- header section start here -->
+<header class="header">
+  <div class="logoContent">
+    <a href="home.html" class="logo" title="Cake Cravings Home">
+      <img src="assets/images/logo.JPG" alt="Cake Cravings Logo">
+    </a>
+    <h1 class="logoName">Cake Cravings</h1>
+  </div>  
+  
+  <nav class="navbar">
+    <a href="home.html">Home</a>
+    <a href="category.html">Categories</a>
+    <a href="pages/reviews.html">Reviews</a>
+    <a href="pages/contact.html">Contact</a>
+  </nav>
+</header>
+<!-- header section end here -->
+
+<section class="blank">
+  <br><br><br><br><br><br>
+</section>
+     
+        
+         
+          <div class="flex" >
+      
+
+            <div class="cp" ><div id="orderNow"> Order Now..</div><p>Frome wedding to birthday,parties and Anivasaries,<br><br><br><div class="font">
+              find everything you need,</div> <br><br><br><div class="font1">to makeypur special occasion unforgatoble.<br>
+                  let's make every moment magical to gether.</div></p></div>
+                  <div class="fill">       </div>
+      <div class="slideimg">
+      <div class="slide fade">
+      <img src="image/c1.jpeg " alt="Slide 1" height="600px" width="760px" >
+      </div>
+    <div class="slide fade">
+    <img src="image/c4.jpeg" alt="Slide 2" height="600px" width="760px">
+     </div>
+     <div class="slide fade">
+    <img src="image/c11.jpeg" alt="Slide 3"height="600px" width="760px">
+     </div>
+
+     <script src="cake.js"></script>
+     </div>
+    </div>
+         
+        <section class="dd3">
+        <div class="category">
+          
+          <img src="image/c10.jpeg" alt="Chocolate Cake">
+          <h2>Wedding Cakes</h2>
+          <p>Explore our delicious Wedding cakes collection.</p>
+          <a href="wedding cake.html" class="btn">View Cakes</a>
+        
+        </div>
+        
+        <div class="category" >
+          <img src="image/c9.jpeg" alt="Fruit Cake">
+          <h2>Birthday Cakes</h2>
+          <p>Discover our fruity and refreshing Birthday cakes.</p>
+          <a href="Birthday cake.html" class="btn">View Cakes</a>
+        </div>
+        <div class="category">
+          <img src="image/c3.jpeg" alt="Cheesecake">
+          <h2>Annivasary cakes</h2>
+          <p>Indulge in the creamy goodness of our Anivasaray cakes.</p>
+          <a href="Annivasary cake.html" class="btn">View Cakes</a>
+        </div>
+      
+      <div class="category">
+          
+        <img src="image/p0.jpeg" alt="Chocolate Cake">
+        <h2>Party Cakes</h2>
+        <p>Explore our delicious Party cakes collection.</p>
+        <a href="Party cake.html" class="btn">View Cakes</a>
+      
+      </div>
+        
+      </section><br><br>
+    
+    
+   
+    
+   
+       
+
+</body>
+</html>
