@@ -228,4 +228,4 @@ For support or questions about this project, please open an issue in the reposit
 
 ---
 
-**Made with ❤️ for Cake Cravings**
+
